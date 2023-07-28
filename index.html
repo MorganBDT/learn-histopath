@@ -1,1 +1,113 @@
-<h1>Hello!</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Histopathology Learning Experiment</title>
+  <style>
+    /* Same CSS styles as before */
+
+    /* Additional CSS styles for the survey form */
+    #survey-form {
+      display: none;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="radio"] {
+      margin-right: 5px;
+    }
+    input[type="text"],
+    input[type="radio"] {
+      margin-bottom: 10px;
+    }
+  </style>
+  <script>
+    function startExperiment() {
+      document.getElementById("start-button").style.display = "none";
+      document.getElementById("survey-form").style.display = "block";
+    }
+
+    function submitSurvey() {
+      // Add your code here to process the survey data if needed
+      // For demonstration purposes, we will just hide the survey form and show the task content
+      document.getElementById("survey-form").style.display = "none";
+      document.getElementById("task-content").style.display = "block";
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Histopathology Learning Experiment</h1>
+  </header>
+  <main>
+    <p>Welcome! In this experiment, you will learn to classify microscope images of human tissues, determining what part of the body they come from and whether or not they contain evidence of cancer. All images are drawn from anonymized, publicly available datasets. To be eligible for the experiment, you must not have received training in histopathology.</p>
+
+    <!-- Start Button -->
+    <button id="start-button" onclick="startExperiment()">Start</button>
+
+    <!-- Survey Form -->
+    <form id="survey-form">
+      <label for="age">Age:</label>
+      <input type="text" id="age" required>
+
+      <label for="gender">Gender:</label>
+      <input type="radio" id="male" name="gender" value="male" required>
+      <label for="male">Male</label>
+      <input type="radio" id="female" name="gender" value="female" required>
+      <label for="female">Female</label>
+      <input type="radio" id="other" name="gender" value="other" required>
+      <label for="other">Other</label>
+
+      <label for="nationality">Nationality:</label>
+      <input type="text" id="nationality" required>
+
+      <label for="education">Education Level:</label>
+      <select id="education" required>
+        <option value="high-school">High School</option>
+        <option value="undergraduate">Undergraduate</option>
+        <option value="graduate">Graduate</option>
+        <option value="phd">PhD</option>
+        <!-- Add more education level options as needed -->
+      </select>
+
+      <label for="histopathology-training">Have you ever received training in histopathology?</label>
+      <input type="radio" id="training-yes" name="histopathology-training" value="yes" required>
+      <label for="training-yes">Yes</label>
+      <input type="radio" id="training-no" name="histopathology-training" value="no" required>
+      <label for="training-no">No</label>
+
+      <label for="expertise">How would you rate your expertise at examining biological tissues under a microscope?</label>
+      <input type="radio" id="expertise-none" name="expertise" value="no-experience" required>
+      <label for="expertise-none">No Experience</label>
+      <input type="radio" id="expertise-novice" name="expertise" value="novice" required>
+      <label for="expertise-novice">Novice</label>
+      <input type="radio" id="expertise-intermediate" name="expertise" value="intermediate" required>
+      <label for="expertise-intermediate">Intermediate</label>
+      <input type="radio" id="expertise-expert" name="expertise" value="expert" required>
+      <label for="expertise-expert">Expert</label>
+
+      <!-- Submit Button -->
+      <button type="button" onclick="submitSurvey()">Submit</button>
+    </form>
+
+    <!-- Task Content -->
+    <div id="task-content" style="display: none;">
+      <!-- Add the content for your task here, such as image classifications and buttons -->
+    </div>
+  </main>
+  <footer>
+    <p>© 2023 Morgan Talbot.</p>
+  </footer>
+</body>
+</html>
+In this updated version, we've added a "Start" button that will show the survey form when clicked. The survey form includes input fields for age, gender, nationality, education level, and two radio buttons for the "histopathology training" and "expertise" questions. When the user clicks the "Submit" button, it will hide the survey form and display the task content.
+
+Please note that this code is just a template for the survey and the subsequent task content. You can customize the survey questions, options, and the appearance as per your experiment's requirements. Additionally, you'll need to add the actual task content (e.g., images, buttons for classifications) inside the <div id="task-content">...</div> section. The JavaScript functions startExperiment() and submitSurvey() are provided as placeholders for you to further process the survey data or implement your desired logic.
+
+
+
+
+
+
