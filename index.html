@@ -5,7 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Histopathology Learning Experiment</title>
   <style>
-    /* Same CSS styles as before */
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 10px 0;
+    }
+    main {
+      padding: 10px calc(8px + 1.5625vw);
+    }
+    button {
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    footer {
+      background-color: #f2f2f2;
+      padding: 10px 0;
+    }
 
     /* Additional CSS styles for the survey form */
     #survey-form {
@@ -13,29 +43,23 @@
     }
     label {
       display: block;
+      margin-top: 20px;
       margin-bottom: 5px;
     }
     input[type="radio"] {
       margin-right: 5px;
     }
-    input[type="text"],
+    input[type="text"] {
+      margin-bottom: 0px;
+    }
+    input[type="select"] {
+      margin-bottom: 0px;
+    }
     input[type="radio"] {
       margin-bottom: 10px;
     }
   </style>
-  <script>
-    function startExperiment() {
-      document.getElementById("start-button").style.display = "none";
-      document.getElementById("survey-form").style.display = "block";
-    }
-
-    function submitSurvey() {
-      // Add your code here to process the survey data if needed
-      // For demonstration purposes, we will just hide the survey form and show the task content
-      document.getElementById("survey-form").style.display = "none";
-      document.getElementById("task-content").style.display = "block";
-    }
-  </script>
+  <script src="navigate.js"> </script>
 </head>
 <body>
   <header>
@@ -44,52 +68,92 @@
   <main>
     <p>Welcome! In this experiment, you will learn to classify microscope images of human tissues, determining what part of the body they come from and whether or not they contain evidence of cancer. All images are drawn from anonymized, publicly available datasets. To be eligible for the experiment, you must not have received training in histopathology.</p>
 
+    <p>For each image, please choose a button to press according to what you think the image is showing.</p>
+
+    <p><strong>Please do not refresh the page, as you will lose your progress and have to start over.</strong></p>
+
     <!-- Start Button -->
     <button id="start-button" onclick="startExperiment()">Start</button>
 
     <!-- Survey Form -->
     <form id="survey-form">
-      <label for="age">Age:</label>
-      <input type="text" id="age" required>
+    
+      <hr>
+    
+      <label for="age"><strong>Year of birth:</strong></label>
+      <select id="ddlYears" required></select>
+      <script type="text/javascript">
+        window.onload = function () {
+            //Reference the DropDownList.
+            var ddlYears = document.getElementById("ddlYears");
+     
+            //Determine the Current Year.
+            var currentYear = (new Date()).getFullYear();
+            
+            var option = document.createElement("OPTION");
+            option.value = "--"
+            option.disabled = true
+            option.selected = true
+            ddlYears.appendChild(option);
+            
+            //Loop and add the Year values to DropDownList.
+            for (var i = 1900; i <= currentYear-18; i++) {
+                var option = document.createElement("OPTION");
+                option.innerHTML = i;
+                option.value = i;
+                ddlYears.appendChild(option);
+            }
+        };
+      </script>
 
-      <label for="gender">Gender:</label>
-      <input type="radio" id="male" name="gender" value="male" required>
-      <label for="male">Male</label>
-      <input type="radio" id="female" name="gender" value="female" required>
-      <label for="female">Female</label>
-      <input type="radio" id="other" name="gender" value="other" required>
-      <label for="other">Other</label>
+      <label><strong>What is your gender identity?</strong></label>
+      <select id="gender" required>
+        <option value="" disabled selected></option>
+        <option value="woman">Woman</option>
+        <option value="man">Man</option>
+        <option value="non-binary">Non-binary person</option>
+        <option value="prefer-no-answer">Prefer not to answer</option>
+      </select>
 
-      <label for="nationality">Nationality:</label>
+<!--
+      <label for="nationality"><strong>Nationality:</strong></label>
       <input type="text" id="nationality" required>
+-->
 
-      <label for="education">Education Level:</label>
+      <label for="education"><strong>Education Level (highest in-progress or completed):</strong></label>
       <select id="education" required>
+        <option value="" disabled selected></option>
+        <option value="less-than-high-school">Less than High School</option>
         <option value="high-school">High School</option>
         <option value="undergraduate">Undergraduate</option>
         <option value="graduate">Graduate</option>
-        <option value="phd">PhD</option>
         <!-- Add more education level options as needed -->
       </select>
 
-      <label for="histopathology-training">Have you ever received training in histopathology?</label>
-      <input type="radio" id="training-yes" name="histopathology-training" value="yes" required>
-      <label for="training-yes">Yes</label>
-      <input type="radio" id="training-no" name="histopathology-training" value="no" required>
-      <label for="training-no">No</label>
+      <label><strong>Have you ever received training in histopathology?</strong></label>
+      <label class="radio-inline">
+        <input type="radio" name="histopathology-training" value="yes" required>Yes
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="histopathology-training" value="no" required>No
+      </label>
 
-      <label for="expertise">How would you rate your expertise at examining biological tissues under a microscope?</label>
-      <input type="radio" id="expertise-none" name="expertise" value="no-experience" required>
-      <label for="expertise-none">No Experience</label>
-      <input type="radio" id="expertise-novice" name="expertise" value="novice" required>
-      <label for="expertise-novice">Novice</label>
-      <input type="radio" id="expertise-intermediate" name="expertise" value="intermediate" required>
-      <label for="expertise-intermediate">Intermediate</label>
-      <input type="radio" id="expertise-expert" name="expertise" value="expert" required>
-      <label for="expertise-expert">Expert</label>
+      <label><strong>How would you rate your degree of expertise at examining biological tissues under a microscope?</strong></label>
+      <label class="radio-inline">
+        <input type="radio" name="expertise" value="no-experience" required>No Experience
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="expertise" value="novice" required>Novice
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="expertise" value="intermediate" required>Intermediate
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="expertise" value="expert" required>Expert
+      </label>
 
       <!-- Submit Button -->
-      <button type="button" onclick="submitSurvey()">Submit</button>
+      <button type="button" onclick="submitSurvey()">Submit and Begin Experiment</button>
     </form>
 
     <!-- Task Content -->
@@ -98,14 +162,10 @@
     </div>
   </main>
   <footer>
-    <p>© 2023 Morgan Talbot.</p>
+    <p>© 2023 Morgan Talbot</p>
   </footer>
 </body>
 </html>
-In this updated version, we've added a "Start" button that will show the survey form when clicked. The survey form includes input fields for age, gender, nationality, education level, and two radio buttons for the "histopathology training" and "expertise" questions. When the user clicks the "Submit" button, it will hide the survey form and display the task content.
-
-Please note that this code is just a template for the survey and the subsequent task content. You can customize the survey questions, options, and the appearance as per your experiment's requirements. Additionally, you'll need to add the actual task content (e.g., images, buttons for classifications) inside the <div id="task-content">...</div> section. The JavaScript functions startExperiment() and submitSurvey() are provided as placeholders for you to further process the survey data or implement your desired logic.
-
 
 
 
