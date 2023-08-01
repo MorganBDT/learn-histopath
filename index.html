@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
   <title>Histopathology Learning Experiment</title>
   <style>
     body {
@@ -58,6 +60,41 @@
     input[type="radio"] {
       margin-bottom: 10px;
     }
+
+    #end_survey_quick_click {
+      text-align: center;
+      margin: 10px;
+      font-size: 1.5em;
+      font-family: Arial, sans-serif;
+      color: blue;
+    }
+
+    /* Additional CSS styles for the response buttons */
+    .class-guess-buttons-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .class-guess-button {
+      background-color: #dcedc8; /* Lighter Pale Green for "Normal" */
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: background-color 0.2s ease;
+      width: 200px;
+    }
+    .class-guess-button.cancer {
+      background-color: #ffcdd2; /* Lighter Pale Red for "Cancer" */
+    }
+    .class-guess-button:hover {
+      background-color: #c5e1a5; /* Slightly Darker Green on hover */
+    }
+    .class-guess-button.cancer:hover {
+      background-color: #ef9a9a; /* Slightly Darker Red on hover */
+    }
   </style>
   <script src="navigate.js"> </script>
 </head>
@@ -66,14 +103,15 @@
     <h1>Histopathology Learning Experiment</h1>
   </header>
   <main>
-    <p>Welcome! In this experiment, you will learn to classify microscope images of human tissues, determining what part of the body they come from and whether or not they contain evidence of cancer. All images are drawn from anonymized, publicly available datasets. To be eligible for the experiment, you must not have received training in histopathology.</p>
 
-    <p>For each image, please choose a button to press according to what you think the image is showing.</p>
+    <div id="intro-text">
+      <p>Welcome! In this experiment, you will learn to classify microscope images of human tissues, determining what part of the body they come from and whether or not they contain evidence of cancer. All images are drawn from anonymized, publicly available datasets. To be eligible for the experiment, you must not have received training in histopathology.</p>
+    </div>
 
-    <p><strong>Please do not refresh the page, as you will lose your progress and have to start over.</strong></p>
+    <p>For each image, please choose a button to press according to what you think the image is showing. <strong>Please do not refresh the page, as you will lose your progress and have to start over.</strong></p>
 
     <!-- Start Button -->
-    <button id="start-button" onclick="startExperiment()">Start</button>
+    <button id="start-button" onclick="startSurvey()">Start</button>
 
     <!-- Survey Form -->
     <form id="survey-form">
@@ -152,6 +190,8 @@
         <input type="radio" name="expertise" value="expert" required>Expert
       </label>
 
+      <!-- <input type="file" id="file-input" accept=".csv"> -->
+
       <!-- Submit Button -->
       <button type="button" onclick="submitSurvey()">Submit and Begin Experiment</button>
     </form>
@@ -159,10 +199,33 @@
     <!-- Task Content -->
     <div id="task-content" style="display: none;">
       <!-- Add the content for your task here, such as image classifications and buttons -->
+      <img id="hist-image" src="" alt="Histology image" height="500">
+      <script> </script>
     </div>
+    
+    <div id="response-container" style="display: none;">
+      <p style="font-size: 25px;">What does this image show?</p>
+      <div class="class-guess-buttons-container">
+        <button class="class-guess-button" onclick="classGuess('normal_colon')" value="normal_colon">Colon: Normal</button>
+        <button class="class-guess-button cancer" onclick="classGuess('cancer_colon')" value="cancer_colon">Colon: Cancer</button>
+      </div>
+      <div class="class-guess-buttons-container">
+        <button class="class-guess-button" onclick="classGuess('normal_breast')" value="normal_breast">Breast: Normal</button>
+        <button class="class-guess-button cancer" onclick="classGuess('cancer_breast')" value="cancer_breast">Breast: Cancer</button>
+      </div>
+      <div class="class-guess-buttons-container">
+        <button class="class-guess-button" onclick="classGuess('normal_lymph_node')" value="normal_lymph_node">Lymph node: Normal</button>
+        <button class="class-guess-button cancer" onclick="classGuess('cancer_lymph_node')" value="cancer_lymph_node">Lymph node: Cancer</button>
+      </div>
+    </div>
+
+    <div id="end_survey_quick_click" style="display: none;">
+      <p> You have exceeded the maximum number of rapid mouse clicks (< 400 milliseconds). Unfortunately, we cannot accept your results for this experiment, because we must ensure that each person carefully evaluates each image before answering. We are sorry for any inconvenience and we thank you for your participation! </p>
+    </div>
+
   </main>
   <footer>
-    <p>© 2023 Morgan Talbot</p>
+    <p>For any questions or concerns, please contact Morgan Talbot. Email address: first letter of first name followed by surname, @mit.edu.</p>
   </footer>
 </body>
 </html>
