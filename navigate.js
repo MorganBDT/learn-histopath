@@ -20,13 +20,17 @@ function getRandomInt(max) {
 }
 
 function getRandomImage() {
+  document.getElementById("response-container").style.display = "block";
+  document.getElementById("answer-container").style.display = "none";
   let fileList = undefined;
   let file = fetchDirmap().then(file => {
       Papa.parse(file, {
         complete: function(result) {
           fileList = result.data;
           let image = document.getElementById('hist-image');
-          image.src = "https://morgan-histopath-96x96.s3.amazonaws.com/" + fileList[getRandomInt(fileList.length - 2)+1][3];
+          let idx = getRandomInt(fileList.length - 2)+1
+          image.src = "https://morgan-histopath-96x96.s3.amazonaws.com/" + fileList[idx][3];
+          image.setAttribute("data-idx", idx)
         }
       })
   })
@@ -45,9 +49,52 @@ function getRandomImage() {
 //  })
 }
 
-function classGuess(className) {
-    //alert("You guessed: " + className);
-    getRandomImage();
+function getImageClass() {
+  let hClass = undefined;
+  let fileList = undefined;
+  let file = fetchDirmap().then(file => {
+      Papa.parse(file, {
+        complete: function(result) {
+          fileList = result.data;
+          let idx = document.getElementById('hist-image').getAttribute("data-idx")
+          hClass = fileList[idx][1]
+          alert(hClass)
+        }
+      })
+  })
+  .catch(error => {
+    // Handle any errors that occur during the fetch or parsing process
+    console.error("Error fetching or parsing CSV:", error);
+  });
+  //alert(hClass)
+  return hClass
+}
+
+function classGuess(guessedClass) {
+    let correctClass = getImageClass()
+    if (guessedClass == correctClass) {
+      document.getElementById("correct-or-not").textContent = "Correct!"
+      document.getElementById("correct-or-not").style.color = "green"
+    } else {
+      document.getElementById("correct-or-not").textContent = "Incorrect!"
+      document.getElementById("correct-or-not").style.color = "red"
+    }
+
+    let class_map = {
+      cancer_colon: "Colon: Cancer",
+      normal_colon: "Colon: Normal",
+      cancer_breast: "Breast: Cancer",
+      normal_breast: "Breast: Normal",
+      cancer_lymph: "Lymph node: Cancer",
+      normal_lymph: "Lymph node: Normal",
+    }
+
+    document.getElementById("correct-or-not").textContent = (guessedClass == correctClass) ? "Correct!" : "Incorrect"
+    document.getElementById("subj-answer-para").textContent = "You answered: \"" + class_map[guessedClass] + "\""
+    document.getElementById("corr-answer-para").textContent = "Correct answer: \"" + class_map[correctClass] + "\""
+    document.getElementById("response-container").style.display = "none";
+    document.getElementById("answer-container").style.display = "block";
+    //getRandomImage();
 }
 
 function showEndSurveyQuickClick() {

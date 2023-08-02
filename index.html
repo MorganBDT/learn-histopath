@@ -199,7 +199,7 @@
     <!-- Task Content -->
     <div id="task-content" style="display: none;">
       <!-- Add the content for your task here, such as image classifications and buttons -->
-      <img id="hist-image" src="" alt="Histology image" height="500">
+      <img id="hist-image" src="" alt="Histology image" data-idx="" height="500">
       <script> </script>
     </div>
     
@@ -217,6 +217,13 @@
         <button class="class-guess-button" onclick="classGuess('normal_lymph_node')" value="normal_lymph_node">Lymph node: Normal</button>
         <button class="class-guess-button cancer" onclick="classGuess('cancer_lymph_node')" value="cancer_lymph_node">Lymph node: Cancer</button>
       </div>
+    </div>
+
+    <div id="answer-container" style="display: none;" data-response="" data-correctresponse="">
+      <p id="correct-or-not" style="font-size: 30px; margin-top: 10px; margin-bottom: 10px">Correct/Incorrect </p>
+      <p id="subj-answer-para" style="font-size: 20px; margin-top: 10px; margin-bottom: 10px">You answered: </p>
+      <p id="corr-answer-para" style="font-size: 20px; margin-top: 10px; margin-bottom: 10px;">Correct answer: </p>
+      <button type="button" onclick="getRandomImage()">Continue</button>
     </div>
 
     <div id="end_survey_quick_click" style="display: none;">
