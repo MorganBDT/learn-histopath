@@ -1,5 +1,7 @@
 "use strict";
 
+let imageFileList = undefined
+
 function startSurvey() {
   document.getElementById("start-button").style.display = "none";
   document.getElementById("survey-form").style.display = "block";
@@ -19,55 +21,65 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
+function fetchDirmap() {
+  return fetch('https://morgan-histopath-96x96.s3.amazonaws.com/histopath_dirmap.csv')
+    .then(response => response.text()) // Get the CSV data as a string
+    .then(data => {
+      let metadata = {
+        type: 'csv'
+      };
+      let file = new File([data], "histopath_dirmap.csv", metadata);
+      return file;
+    });
+}
+
 function getRandomImage() {
+
+  if (imageFileList === undefined) {
+    let fileList = undefined;
+    let file = fetchDirmap().then(file => {
+        Papa.parse(file, {
+          complete: function(result) {
+            imageFileList = result.data;
+            getRandomImage();
+          }
+        })
+    })
+    .catch(error => {
+      // Handle any errors that occur during the fetch or parsing process
+      console.error("Error fetching or parsing CSV:", error);
+    });
+  } else {
+    let image = document.getElementById('hist-image');
+    let idx = getRandomInt(imageFileList.length - 2)+1
+    image.src = "https://morgan-histopath-96x96.s3.amazonaws.com/" + imageFileList[idx][3];
+    image.setAttribute("data-idx", idx)
+  }
+
   document.getElementById("response-container").style.display = "block";
   document.getElementById("answer-container").style.display = "none";
-  let fileList = undefined;
-  let file = fetchDirmap().then(file => {
-      Papa.parse(file, {
-        complete: function(result) {
-          fileList = result.data;
-          let image = document.getElementById('hist-image');
-          let idx = getRandomInt(fileList.length - 2)+1
-          image.src = "https://morgan-histopath-96x96.s3.amazonaws.com/" + fileList[idx][3];
-          image.setAttribute("data-idx", idx)
-        }
-      })
-  })
-  .catch(error => {
-    // Handle any errors that occur during the fetch or parsing process
-    console.error("Error fetching or parsing CSV:", error);
-  });
-//  Papa.parse(file, {
-//    complete: function(result) {
-//      fileList = result.data;
-//      let image = document.getElementById('hist-image');
-//      //image.src = "/home/morgan/projects/learn-histopath-backend/data/combined_histopath_subsample/" + fileList[getRandomInt(fileList.length - 2)+1][3];
-//      //image.src = "/media/morgan/MT_Backup/datasets/combined_histopath_96x96_subsample/" + fileList[getRandomInt(fileList.length - 2)+1][3];
-//      image.src = "https://morgan-histopath-96x96.s3.amazonaws.com/" + fileList[getRandomInt(fileList.length - 2)+1][3];
-//    }
-//  })
 }
 
 function getImageClass() {
-  let hClass = undefined;
-  let fileList = undefined;
-  let file = fetchDirmap().then(file => {
-      Papa.parse(file, {
-        complete: function(result) {
-          fileList = result.data;
-          let idx = document.getElementById('hist-image').getAttribute("data-idx")
-          hClass = fileList[idx][1]
-          alert(hClass)
-        }
-      })
-  })
-  .catch(error => {
-    // Handle any errors that occur during the fetch or parsing process
-    console.error("Error fetching or parsing CSV:", error);
-  });
-  //alert(hClass)
-  return hClass
+//  let hClass = undefined;
+//  let fileList = undefined;
+//  let file = fetchDirmap().then(file => {
+//      Papa.parse(file, {
+//        complete: function(result) {
+//          fileList = result.data;
+//          let idx = document.getElementById('hist-image').getAttribute("data-idx")
+//          hClass = fileList[idx][1]
+//          alert(hClass)
+//        }
+//      })
+//  })
+//  .catch(error => {
+//    // Handle any errors that occur during the fetch or parsing process
+//    console.error("Error fetching or parsing CSV:", error);
+//  });
+
+  let idx = document.getElementById('hist-image').getAttribute("data-idx")
+  return imageFileList[idx][1]
 }
 
 function classGuess(guessedClass) {
@@ -122,14 +134,3 @@ function showEndSurveyQuickClick() {
 ////  return file
 //}
 
-function fetchDirmap() {
-  return fetch('https://morgan-histopath-96x96.s3.amazonaws.com/histopath_dirmap.csv')
-    .then(response => response.text()) // Get the CSV data as a string
-    .then(data => {
-      let metadata = {
-        type: 'csv'
-      };
-      let file = new File([data], "histopath_dirmap.csv", metadata);
-      return file;
-    });
-}
